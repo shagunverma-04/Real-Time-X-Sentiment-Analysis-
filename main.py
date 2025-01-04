@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request.render_template, redirect, request 
+from flask import Flask, render_template, request, redirect 
 import numpy as np 
 import tweepy 
 import pandas as pd 
@@ -110,4 +110,4 @@ def home():
      return render_template('index.html')
 
 if __name__=="__main__":
-     app.run()
+     app.run(debug=True)
