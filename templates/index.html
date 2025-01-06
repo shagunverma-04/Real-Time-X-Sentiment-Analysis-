@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Sentiment Analysis</title>
+</head>
+<body>
+    <h1>Twitter Sentiment Analysis</h1>
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+    <form action="/sentiment" method="post">
+        <label for="userid">Enter User ID:</label>
+        <input type="text" id="userid" name="userid">
+        <br><br>
+        <label for="hashtag">Enter Hashtag:</label>
+        <input type="text" id="hashtag" name="hashtag">
+        <br><br>
+        <button type="submit">Analyze</button>
+    </form>
+</body>
+</html>

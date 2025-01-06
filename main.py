@@ -7,19 +7,18 @@ from textblob import TextBlob
 import re 
 
 app = Flask(__name__)
-def home():
-    return 'Hello, World!'
+
 
 @app.route('/sentiment', methods = ['GET','POST'])
 def sentiment():
     userid =  request.form.get('userid')
     hashtag = request.form.get('hashtag')
 
-    if userid == " " and hashtag == " ":
+    if userid == "" and hashtag == "":
          error = "Please enter valid value"
          return render_template('index.html', error = error)
     
-    if not userid == " " and not hashtag == " ":
+    if not userid == "" and not hashtag == "":
          error = "Please enter either userid or hashtag"
          return render_template('index.html', error = error)
     
