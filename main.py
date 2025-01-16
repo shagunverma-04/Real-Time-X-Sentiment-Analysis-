@@ -50,11 +50,16 @@ def sentiment():
     
 
 #twitter api authentication 
-    client = tweepy.Client(bearer_token=os.getenv('BEARER_TOKEN'),
-                           consumerKey = os.getenv("CONSUMER_KEY"),
-                           consumerSecret = os.getenv("CONSUMER_SECRET"),
-                           accessToken = os.getenv("ACCESS_TOKEN"),
-                           accessTokenSecret = os.getenv("ACCESS_TOKEN_SECRET"))
+    client = tweepy.Client(bearer_token=os.getenv('BEARER_TOKEN'))
+
+    # OAuth 1.0a for user actions
+    auth = tweepy.OAuth1UserHandler(
+    consumer_key=os.getenv("CONSUMER_KEY"),
+    consumer_secret=os.getenv("CONSUMER_SECRET"),
+    access_token=os.getenv("ACCESS_TOKEN"),
+    access_token_secret=os.getenv("ACCESS_TOKEN_SECRET")
+    )
+    api = tweepy.API(auth)
    
 #fetch tweets 
     if hashtag:
