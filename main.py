@@ -9,6 +9,29 @@ import re
 app = Flask(__name__)
 
 
+#function to clean tweet text
+def cleanTxt(text):
+         text = re.sub(r'@[A-Za-z0-9]+', '', text) #removing @mentions 
+         text = re.sub(r'#', '', text) #removing the # symbol
+         text = re.sub('RT[\s]+', '', text) # removing the RT 
+         text = re.sub(r'https?\/\/\S+', '', text) # removing the link
+         return text
+    
+#function to calculate sentiment 
+def getSubjectivity(text):
+         return TextBlob(text).sentiment.subjectivity
+    
+def getPolarity(text):
+         return TextBlob(text).sentiment.polarity 
+    
+def getAnalysis(score):
+         if score > 0:
+              return 'Positive'
+         elif score < 0:
+              return 'Negative'
+         else:
+              return 'Neutral'
+
 @app.route('/sentiment', methods = ['GET','POST'])
 def sentiment():
     userid =  request.form.get('userid')
@@ -25,38 +48,31 @@ def sentiment():
 
 
     ###########Insert Twitter API#############
-    consumerKey ="I1XCpkNGDeNHJr3JuhKd3zClN"
-    consumerSecret ="r7EZXSEuMAYxBAEgK0CPps9RaXftg82Vjh6aZq1PGjuTL0Nr7Y"
-    accessToken ="1875259013031718912-tOIl4ihu96jcVsneNaP5NfgJVoCFHx"
-    accessTokenSecret ="JfbeH9QSLlivhq7f8jKbAae2zNPZKUxeHMnq2XkaZSneM"
+    consumerKey ="Swr7ruFRv5HrrBws0XSNu6PnI"
+    consumerSecret ="xz2vHh7B5bQQDWTMLtFWuAWfE4BfbuG4I8ECkGH68zOeIZvXqQ"
+    accessToken ="1875259013031718912-3y3cx7N2MBmlg2VFzBGLlp7YrVGgaT"
+    accessTokenSecret ="Qb7VBe0kPXr9l7fgkrKb9KDOl8bsrvHWA0M2LxHFjtKi2"
+    bearer_token = "AAAAAAAAAAAAAAAAAAAAALKexwEAAAAASWdZPgBPZVnPNY0copI%2FzqVdr1g%3DCo0FBOxCyaYle5YSy0804wwDtOdssGclA7O1trTYR3hZfq8QSu"
 
-    authenticate = tweepy.OAuthHAndler(consumerKey, consumerSecret)
+    authenticate = tweepy.OAuthHandler(consumerKey, consumerSecret)
     authenticate.set_access_token(accessToken, accessTokenSecret)
     api = tweepy.API(authenticate, wait_on_rate_limit=True)#api rate limit(max tweets that can be fetched in a particular time frame )
 
-    def cleanTxt(text):
-         text = re.sub(r'@[A-Za-z0-9]+', '', text) #removing @mentions 
-         text = re.sub(r'#', '', text) #removing the # symbol
-         text = re.sub('RT[\s]+', '', text) # removing the RT 
-         text = re.sub(r'https?\/\/\S+', '', text) # removing the link
-         return text
+    client = tweepy.Client(bearer_token="")
+    user = client.get_user(username="USERNAME")
+    user_id = user.data.id
+    # Fetch user tweets
+    response = client.get_users_tweets(
+    id="USER_ID",
+    max_results=100
+    )
     
-    def getSubjectivity(text):
-         return TextBlob(text).sentiment.subjectivity
-    
-    def getPolarity(text):
-         return TextBlob(text).sentiment.polarity 
-    
-    def getAnalysis(score):
-         if score > 0:
-              return 'Positive'
-         elif score < 0:
-              return 'Negative'
-         else:
-              return 'Neutral'
+    for tweet in response.data:
+         print(tweet.text)
+
          
 # fetching and processing hashtag tweets 
-    if userid == "":
+    if hashtag:
          #hashtag coding 
          msgs = []
          msg = []
@@ -111,4 +127,4 @@ def home():
      return render_template('index.html')
 
 if __name__=="__main__":
-     app.run()
+     app.run(debug=True)
